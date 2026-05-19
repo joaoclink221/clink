@@ -10,7 +10,7 @@ public class clink {
             novo[i] = linha[i];
         }
         return novo;
-    }
+    } // Essa função será usada futuramente para aumentar o tamanho da matriz no aumentarMatrizContatos ou aumentarMatrizClientes, copiando a linha.
 
     /* =========  CONTATOS  ========= */
 
@@ -22,7 +22,18 @@ public class clink {
             }
         }
         return novoContato;
-    }
+    } // Essa função vai servir para aumentar o tamanho da matriz de contatos, adicionando uma nova linha
+
+    public static int proximoCodigoContato(String[][] contatos) {
+        int maior = 0;
+        for (int i = 0; i < contatos.length; i++) {
+            if (contatos[i][0] != null) {
+                int cod = Integer.parseInt(contatos[i][0]);
+                if (cod > maior) maior = cod;
+            }
+        }
+        return maior + 1;
+    } // Essa função vai servir para gerar o código de contato automaticamente.
 
     /* =========  MAIN  ========= */
 
@@ -30,5 +41,6 @@ public class clink {
         Scanner scanner = new Scanner(System.in);
 
         String [][] contatos = new String[5][5];
+
     }
 }
