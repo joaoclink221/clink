@@ -35,6 +35,18 @@ public class clink {
         return maior + 1;
     } // Essa função vai servir para gerar o código de contato automaticamente.
 
+     /* =========  Clientes  ========= */
+
+     public static String[][] aumentarMatrizClientes(String[][] clientes){
+        String[][] novoCliente = new String[clientes.length + 1] [8];
+        for (int i = 0; i < clientes.length; i++) {
+            if (clientes[i][0] != null) {
+                novoCliente[i] = copiarLinha(clientes[i]);
+            }
+        }
+        return novoCliente;
+     }
+
     /* =========  MAIN  ========= */
 
     public static void main(String[] args) {
