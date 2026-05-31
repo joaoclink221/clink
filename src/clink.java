@@ -128,6 +128,15 @@ public class clink {
         }
     }
 
+    public static int buscarClientePorCodigo(String[][] clientes, String codigo) {
+        for (int i = 0; i < clientes.length; i++) {
+            if (clientes[i][0] != null && clientes[i][0].equals(codigo)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     /* ========= MAIN ========= */
 
     public static void main(String[] args) {
