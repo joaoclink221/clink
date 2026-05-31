@@ -2,17 +2,18 @@ import java.util.Scanner;
 
 public class clink {
 
-    /* =========  AUXILIARES  ========= */
+    /* ========= AUXILIARES ========= */
 
-    public static String[] copiarLinha(String[] linha){
+    public static String[] copiarLinha(String[] linha) {
         String[] novo = new String[linha.length];
         for (int i = 0; i < linha.length; i++) {
             novo[i] = linha[i];
         }
         return novo;
-    } // Essa função será usada futuramente para aumentar o tamanho da matriz no aumentarMatrizContatos ou aumentarMatrizClientes, copiando a linha.
+    } // Essa função será usada futuramente para aumentar o tamanho da matriz no
+      // aumentarMatrizContatos ou aumentarMatrizClientes, copiando a linha.
 
-    /* =========  CONTATOS  ========= */
+    /* ========= CONTATOS ========= */
 
     public static String[][] aumentarMatrizContatos(String[][] contatos) {
         String[][] novoContato = new String[contatos.length + 1][5];
@@ -22,14 +23,16 @@ public class clink {
             }
         }
         return novoContato;
-    } // Essa função vai servir para aumentar o tamanho da matriz de contatos, adicionando uma nova linha
+    } // Essa função vai servir para aumentar o tamanho da matriz de contatos,
+      // adicionando uma nova linha
 
     public static int proximoCodigoContato(String[][] contatos) {
         int maior = 0;
         for (int i = 0; i < contatos.length; i++) {
             if (contatos[i][0] != null) {
                 int cod = Integer.parseInt(contatos[i][0]);
-                if (cod > maior) maior = cod;
+                if (cod > maior)
+                    maior = cod;
             }
         }
         return maior + 1;
@@ -38,28 +41,30 @@ public class clink {
     public static int contarContatos(String[][] contatos) {
         int total = 0;
         for (int i = 0; i < contatos.length; i++) {
-            if (contatos[i][0] != null) total++;
+            if (contatos[i][0] != null)
+                total++;
         }
-        
+
         return total;
     } // Contagem de quantos contatos o cliente colocou.
 
-     /* =========  Clientes  ========= */
+    /* ========= Clientes ========= */
 
-     public static String[][] aumentarMatrizClientes(String[][] clientes){
-        String[][] novoCliente = new String[clientes.length + 1] [8];
+    public static String[][] aumentarMatrizClientes(String[][] clientes) {
+        String[][] novoCliente = new String[clientes.length + 1][8];
         for (int i = 0; i < clientes.length; i++) {
             if (clientes[i][0] != null) {
                 novoCliente[i] = copiarLinha(clientes[i]);
             }
         }
         return novoCliente;
-     } // Essa função vai servir para aumentar o tamanho da matriz de clientes, adicionando uma nova linha.
+    } // Essa função vai servir para aumentar o tamanho da matriz de clientes,
+      // adicionando uma nova linha.
 
-     public static String [][] incluirCliente(String[][] clientes, Scanner sc){
+    public static String[][] incluirCliente(String[][] clientes, Scanner sc) {
         int maiorCodigo = 0;
 
-        boolean cheio =true;
+        boolean cheio = true;
 
         for (int i = 0; i < clientes.length; i++) {
             if (clientes[i][0] == null) {
@@ -73,10 +78,11 @@ public class clink {
         for (int i = 0; i < clientes.length; i++) {
             if (clientes[i][0] != null) {
                 int codigo = Integer.parseInt(clientes[i][0]);
-                if (codigo>maiorCodigo) maiorCodigo = codigo;
+                if (codigo > maiorCodigo)
+                    maiorCodigo = codigo;
             }
         }
-        int novoCodigo = maiorCodigo+1;
+        int novoCodigo = maiorCodigo + 1;
 
         for (int i = 0; i < clientes.length; i++) {
             if (clientes[i][0] == null) {
@@ -104,15 +110,30 @@ public class clink {
                 break;
             }
         }
-       return clientes;
-     }
+        return clientes;
+    }
 
-    /* =========  MAIN  ========= */
+    public static void listarClientesTabela(String[][] clientes) {
+        System.out.println("Código | Nome | CPF/CNPJ | Nascimento | Sexo | Cidade | Estado | Status");
+        System.out.println(
+                "--------------------------------------------------------------------------------------------");
+
+        for (int i = 0; i < clientes.length; i++) {
+            if (clientes[i][0] != null) {
+                System.out.println(
+                        clientes[i][0] + " | " + clientes[i][1] + " | " + clientes[i][2] + " | " + clientes[i][3]
+                                + " | " + clientes[i][4] + " | " + clientes[i][5] + " | " + clientes[i][6] + " | "
+                                + clientes[i][7]);
+            }
+        }
+    }
+
+    /* ========= MAIN ========= */
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        String [][] contatos = new String[5][5];
+        String[][] contatos = new String[5][5];
 
     }
 }
