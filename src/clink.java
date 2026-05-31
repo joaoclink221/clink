@@ -40,6 +40,7 @@ public class clink {
         for (int i = 0; i < contatos.length; i++) {
             if (contatos[i][0] != null) total++;
         }
+        
         return total;
     } // Contagem de quantos contatos o cliente colocou.
 
