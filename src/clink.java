@@ -35,6 +35,14 @@ public class clink {
         return maior + 1;
     } // Essa função vai servir para gerar o código de contato automaticamente.
 
+    public static int contarContatos(String[][] contatos) {
+        int total = 0;
+        for (int i = 0; i < contatos.length; i++) {
+            if (contatos[i][0] != null) total++;
+        }
+        return total;
+    } // Contagem de quantos contatos o cliente colocou.
+
      /* =========  Clientes  ========= */
 
      public static String[][] aumentarMatrizClientes(String[][] clientes){
