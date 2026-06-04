@@ -11,6 +11,26 @@ public class clink {
         }
         return novo;
     }
+    public static int compararNomeCharPorChar(String nome1, String nome2) {
+        //Converte os dois nomes para maiúsculo para ignorar diferença entre maiúsculas e minúsculas
+        String a = nome1.toUpperCase();
+        String b = nome2.toUpperCase();
+
+        // Pega o tamanho do menor nome para não passar do limite na comparação
+        int menor = a.length();
+        if (b.length() < menor) menor = b.length();
+
+        // Compara letra por letra até encontrar uma diferença
+        for (int i = 0; i < menor; i++) {
+            if (a.charAt(i) < b.charAt(i)) return -1; // nome1 vem antes
+            if (a.charAt(i) > b.charAt(i)) return 1;  // nome1 vem depois
+        }
+
+        // Se todas as letras foram iguais, o nome mais curto vem primeiro
+        if (a.length() < b.length()) return -1;
+        if (a.length() > b.length()) return 1;
+        return 0; // nomes são iguais
+    }
 
     /* ========= CONTATOS ========= */
 
@@ -123,6 +143,25 @@ public class clink {
             }
         }
         return -1;
+    }
+
+    public static void ordenarClientesPorNome(String[][] clientes) {
+        // Percorre a matriz comparando cada cliente com o próximo
+        for (int i = 0; i < clientes.length - 1; i++) {
+            for (int j = i + 1; j < clientes.length; j++) {
+
+                // Ignora linhas vazias
+                if (clientes[i][0] == null || clientes[j][0] == null) continue;
+
+                // Se o nome do cliente i vier depois do nome do cliente j, troca as linhas
+                if (compararNomeCharPorChar(clientes[i][1], clientes[j][1]) > 0) {
+                    String[] temp = clientes[i];
+                    clientes[i] = clientes[j];
+                    clientes[j] = temp;
+                }
+            }
+        }
+        System.out.println("Clientes ordenados por nome com sucesso!");
     }
 
     /* ========= RELATÓRIOS ========= */
