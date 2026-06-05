@@ -2,17 +2,37 @@ import java.util.Scanner;
 
 public class clink {
 
-    /* =========  AUXILIARES  ========= */
+    /* ========= AUXILIARES ========= */
 
-    public static String[] copiarLinha(String[] linha){
+    public static String[] copiarLinha(String[] linha) {
         String[] novo = new String[linha.length];
         for (int i = 0; i < linha.length; i++) {
             novo[i] = linha[i];
         }
         return novo;
-    } // Essa função será usada futuramente para aumentar o tamanho da matriz no aumentarMatrizContatos ou aumentarMatrizClientes, copiando a linha.
+    }
+    public static int compararNomeCharPorChar(String nome1, String nome2) {
+        //Converte os dois nomes para maiúsculo para ignorar diferença entre maiúsculas e minúsculas
+        String a = nome1.toUpperCase();
+        String b = nome2.toUpperCase();
 
-    /* =========  CONTATOS  ========= */
+        // Pega o tamanho do menor nome para não passar do limite na comparação
+        int menor = a.length();
+        if (b.length() < menor) menor = b.length();
+
+        // Compara letra por letra até encontrar uma diferença
+        for (int i = 0; i < menor; i++) {
+            if (a.charAt(i) < b.charAt(i)) return -1; // nome1 vem antes
+            if (a.charAt(i) > b.charAt(i)) return 1;  // nome1 vem depois
+        }
+
+        // Se todas as letras foram iguais, o nome mais curto vem primeiro
+        if (a.length() < b.length()) return -1;
+        if (a.length() > b.length()) return 1;
+        return 0; // nomes são iguais
+    }
+
+    /* ========= CONTATOS ========= */
 
     public static String[][] aumentarMatrizContatos(String[][] contatos) {
         String[][] novoContato = new String[contatos.length + 1][5];
@@ -22,25 +42,279 @@ public class clink {
             }
         }
         return novoContato;
-    } // Essa função vai servir para aumentar o tamanho da matriz de contatos, adicionando uma nova linha
+    }
 
     public static int proximoCodigoContato(String[][] contatos) {
         int maior = 0;
         for (int i = 0; i < contatos.length; i++) {
             if (contatos[i][0] != null) {
                 int cod = Integer.parseInt(contatos[i][0]);
-                if (cod > maior) maior = cod;
+                if (cod > maior)
+                    maior = cod;
             }
         }
         return maior + 1;
-    } // Essa função vai servir para gerar o código de contato automaticamente.
+    }
 
-    /* =========  MAIN  ========= */
+    public static int contarContatos(String[][] contatos) {
+        int total = 0;
+        for (int i = 0; i < contatos.length; i++) {
+            if (contatos[i][0] != null)
+                total++;
+        }
+        return total;
+    }
+
+    public static String[][] incluirContato(String[][] contatos, String[][] clientes, Scanner scanner) {
+        int codCli;
+
+        System.out.println("=== INCLUIR CONTATO ===");
+        System.out.print("Digite o código de cliente: ");
+        try { codCli = Integer.parseInt(scanner.nextLine().trim()); }
+        catch (NumberFormatException e) {
+            System.out.println("Código inválido."); return contatos;
+        }
+
+        int idxCli = buscarClientePorCodigo(clientes, codCli);
+        if (idxCli == -1) {
+            System.out.println("Cliente não encontrado."); return contatos;
+        }
+
+            System.out.println("Cliente encontrado: " + clientes[idxCli][1]);
+
+            System.out.println("\nTipos sugeridos: Telefone | WhatsApp | Email | Instagram | Site | LinkedIn | Outro");
+            System.out.print("Digite o tipo do contato: ");
+            String tipo = scanner.nextLine().trim();
+            System.out.print("Digite o valor do contato: ");
+            String valor = scanner.nextLine().trim();
+
+            // Verificador de espaço dentro da matriz
+
+            boolean temEspaco = false;
+            for (int i = 0; i < contatos.length; i++) {
+                if (contatos[i][0] == null) {
+                    temEspaco = true; break;
+                }
+            }
+            if (!temEspaco) contatos = aumentarMatrizContatos(contatos);
+
+            int codigo = proximoCodigoContato(contatos);
+            for (int i = 0; i < contatos.length; i++) {
+                if (contatos[i][0] == null) {
+                    contatos[i][0] = String.valueOf(codigo);
+                    contatos[i][1] = String.valueOf(codCli);
+                    contatos[i][2] = tipo;
+                    contatos[i][3] = valor;
+                    contatos[i][4] = "ATIVO";
+                    break;
+                }
+            }
+            System.out.println("Contato cadastrado com código: " + codigo);
+            return contatos;
+    }
+
+
+
+    /* ========= CLIENTES ========= */
+
+    public static String[][] aumentarMatrizClientes(String[][] clientes) {
+        String[][] novoCliente = new String[clientes.length + 1][8];
+        for (int i = 0; i < clientes.length; i++) {
+            if (clientes[i][0] != null) {
+                novoCliente[i] = copiarLinha(clientes[i]);
+            }
+        }
+        return novoCliente;
+    }
+
+    public static String[][] incluirCliente(String[][] clientes, Scanner sc) {
+        int maiorCodigo = 0;
+        boolean cheio = true;
+
+        for (int i = 0; i < clientes.length; i++) {
+            if (clientes[i][0] == null) {
+                cheio = false;
+                break;
+            }
+        }
+        if (cheio) {
+            clientes = aumentarMatrizClientes(clientes);
+        }
+        for (int i = 0; i < clientes.length; i++) {
+            if (clientes[i][0] != null) {
+                int codigo = Integer.parseInt(clientes[i][0]);
+                if (codigo > maiorCodigo)
+                    maiorCodigo = codigo;
+            }
+        }
+        int novoCodigo = maiorCodigo + 1;
+
+        for (int i = 0; i < clientes.length; i++) {
+            if (clientes[i][0] == null) {
+                clientes[i][0] = String.valueOf(novoCodigo);
+                System.out.println("informe o nome:");
+                clientes[i][1] = sc.nextLine();
+                System.out.println("informe o CPF ou CNPJ:");
+                clientes[i][2] = sc.nextLine();
+                System.out.println("informe o Data de nascimento:");
+                clientes[i][3] = sc.nextLine();
+                System.out.println("informe o Sexo:");
+                clientes[i][4] = sc.nextLine();
+                System.out.println("informe o Cidade:");
+                clientes[i][5] = sc.nextLine();
+                System.out.println("informe o Estado:");
+                clientes[i][6] = sc.nextLine();
+                System.out.println("informe o Status:");
+                clientes[i][7] = sc.nextLine();
+                break;
+            }
+        }
+        return clientes;
+    }
+
+    public static void listarClientesTabela(String[][] clientes) {
+        System.out.println("Código | Nome | CPF/CNPJ | Nascimento | Sexo | Cidade | Estado | Status");
+        System.out.println("--------------------------------------------------------------------------------------------");
+
+        for (int i = 0; i < clientes.length; i++) {
+            if (clientes[i][0] != null) {
+                System.out.println(
+                        clientes[i][0] + " | " + clientes[i][1] + " | " + clientes[i][2] + " | " + clientes[i][3]
+                                + " | " + clientes[i][4] + " | " + clientes[i][5] + " | " + clientes[i][6] + " | "
+                                + clientes[i][7]);
+            }
+        }
+    }
+
+    public static int buscarClientePorCodigo(String[][] clientes, int codigo) {
+        for (int i = 0; i < clientes.length; i++) {
+            if (clientes[i][0] != null && clientes[i][0].equals(codigo)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static void ordenarClientesPorNome(String[][] clientes) {
+        // Percorre a matriz comparando cada cliente com o próximo
+        for (int i = 0; i < clientes.length - 1; i++) {
+            for (int j = i + 1; j < clientes.length; j++) {
+
+                // Ignora linhas vazias
+                if (clientes[i][0] == null || clientes[j][0] == null) continue;
+
+                // Se o nome do cliente i vier depois do nome do cliente j, troca as linhas
+                if (compararNomeCharPorChar(clientes[i][1], clientes[j][1]) > 0) {
+                    String[] temp = clientes[i];
+                    clientes[i] = clientes[j];
+                    clientes[j] = temp;
+                }
+            }
+        }
+        System.out.println("Clientes ordenados por nome com sucesso!");
+    }
+
+    /* ========= RELATÓRIOS ========= */
+
+    public static void menuRelatorios(String[][] clientes, String[][] contatos, Scanner ler) {
+        int opcao = 0;
+
+        while (opcao != 3) {
+            System.out.println("===== MENU DE RELATÓRIOS =====");
+            System.out.println("1 - Listar clientes e total de contatos");
+            System.out.println("2 - Sumarização de dados");
+            System.out.println("3 - Voltar");
+            System.out.print("Escolha uma opção: ");
+            opcao = Integer.parseInt(ler.nextLine());
+
+            switch (opcao) {
+                case 1:
+                    listarClientesCContatos(clientes, contatos);
+                    break;
+                case 2:
+                    sumarizarDados(clientes, contatos);
+                    break;
+                case 3:
+                    System.out.println("Voltando...");
+                    break;
+                default:
+                    System.out.println("Opção Inválida!");
+            }
+        }
+    }
+
+    public static void listarClientesCContatos(String[][] clientes, String[][] contatos) {
+        System.out.println("---Clientes e o Total dos Contatos---");
+        System.out.println("Código | Nome             | Total de Contatos");
+        System.out.println("-----------------------");
+
+        int totalDeClientes = 0;
+        int totalDeContatos = 0;
+
+        for (int i = 0; i < clientes.length; i++) {
+            if (clientes[i][0] != null) {
+                int totalDoCliente = 0;
+
+                for (int j = 0; j < contatos.length; j++) {
+                    if (contatos[j][0] != null && contatos[j][1].equals(clientes[i][0])) {
+                        totalDoCliente++;
+                    }
+                }
+                System.out.println(clientes[i][0] + "      | " + clientes[i][1] + " | " + totalDoCliente);
+                totalDeClientes++;
+                totalDeContatos += totalDoCliente;
+            }
+        }
+
+        System.out.println("-----------------------");
+        System.out.println("Total de clientes: " + totalDeClientes);
+        System.out.println("Total de contatos: " + totalDeContatos);
+    }
+
+    public static void sumarizarDados(String[][] clientes, String[][] contatos) {
+        System.out.println("---Sumarização de dados---");
+
+        int totalCliente = 0;
+        int totalContatos = 0;
+        int clientesSemContato = 0;
+
+        for (int i = 0; i < clientes.length; i++) {
+            if (clientes[i][0] != null) {
+                totalCliente++;
+                int totalDoCliente = 0;
+
+                for (int j = 0; j < contatos.length; j++) {
+                    if (contatos[j][0] != null && contatos[j][1].equals(clientes[i][0])) {
+                        totalDoCliente++;
+                    }
+                }
+
+                totalContatos += totalDoCliente;
+
+                if (totalDoCliente == 0) {
+                    clientesSemContato++;
+                }
+            }
+        }
+
+        double media = 0;
+        if (totalCliente > 0) {
+            media = (double) totalContatos / totalCliente;
+        }
+
+        System.out.println("Total de clientes:          " + totalCliente);
+        System.out.println("Total de contatos:          " + totalContatos);
+        System.out.println("Média de contatos/cliente:  " + media);
+        System.out.println("Clientes sem contato:       " + clientesSemContato);
+    }
+
+    /* ========= MAIN ========= */
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        String [][] contatos = new String[5][5];
+        String[][] clientes = new String[5][8];
+        String[][] contatos = new String[5][5];
 
     }
 }
