@@ -137,7 +137,7 @@ public class clink {
         return -1;
     }
 
-   public static String[][] alterarCliente(String[][] clientes, Scanner sc) {
+    public static String[][] alterarCliente(String[][] clientes, Scanner sc) {
         listarClientesTabela(clientes);
         System.out.println("qual cliente deseja alterar?");
         String codigo = sc.nextLine();
@@ -145,13 +145,13 @@ public class clink {
 
         if (indice == -1) {
             System.out.println("cliente não encontrado");
-        }else{
+        } else {
             listarClientesTabela(clientes);
             System.out.println("Deseja alterar este cliente? (S/N)");
             String confirmacao = sc.nextLine();
 
             if (confirmacao.toUpperCase().equals("S")) {
-                 System.out.println("informe o nome:");
+                System.out.println("informe o nome:");
                 clientes[indice][1] = sc.nextLine();
 
                 System.out.println("informe o CPF ou CNPJ:");
@@ -176,7 +176,35 @@ public class clink {
         return clientes;
     }
 
-    
+    public static String[][] apagarCliente(String[][] clientes, Scanner sc) {
+        listarClientesTabela(clientes);
+
+        System.out.println("informe o código do cliente que deseja apagar");
+        String codigo = sc.nextLine();
+        int indice = buscarClientePorCodigo(clientes, codigo);
+
+        if (indice == -1) {
+            System.out.println("cliente não encontrado");
+        } else {
+            listarClientesTabela(clientes);
+            System.out.println("Deseja apagar este cliente? (S/N)");
+            String confirmacao = sc.nextLine();
+
+            if (confirmacao.toUpperCase().equals("S")) {
+                String[][] novaMatriz = new String[clientes.length - 1][8];
+                int j = 0;
+                for (int i = 0; i < clientes.length; i++) {
+                    if (i != indice) {
+                        novaMatriz[j] = copiarLinha(clientes[i]);
+                        j++;
+                    }
+                }
+                return novaMatriz;
+            }
+
+        }
+        return clientes;
+    }
 
     /* ========= MAIN ========= */
 
