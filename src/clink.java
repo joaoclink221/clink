@@ -34,6 +34,22 @@ public class clink {
         return 0; // nomes são iguais
     }
 
+    static void limparLinha(String[] linha) {
+        for (int i = 0; i < linha.length; i++) {
+            linha[i] = null;
+        }
+    }
+
+    static void trocarLinhas(String[][] matriz, int i, int j) {
+        String[] troca = copiarLinha(matriz[i]);
+        for (int k = 0; k < matriz[i].length; k++) {
+            matriz[i][k] = matriz[j][k];
+        }
+        for (int k = 0; k < matriz[j].length; k++) {
+            matriz[j][k] = troca[k];
+        }
+    }
+
     /* ========= CONTATOS ========= */
 
     public static String[][] aumentarMatrizContatos(String[][] contatos) {
@@ -146,7 +162,112 @@ public class clink {
         if (!algum) System.out.println("Nenhum contato cadastrado.");
     }
 
+    static void listarContatosPorCliente(String[][] contatos, String[][] clientes, Scanner sc) {
+        listarContatosTabela(contatos, clientes);
+        System.out.print("\nSelecione o cliente que quer listar os contatos => ");
+        int codCli;
+        try { codCli = Integer.parseInt(sc.nextLine().trim()); }
+        catch (NumberFormatException e) { System.out.println("Código inválido."); return; }
 
+        System.out.println("\nCodCont | CodCli | Nome Cliente         | Tipo        | Valor                | Status");
+        System.out.println("======================================================================================");
+        boolean algum = false;
+        for (int i = 0; i < contatos.length; i++) {
+            if (contatos[i][0] != null && Integer.parseInt(contatos[i][1]) == codCli) {
+                algum = true;
+                String nomeCli = buscarNomeCliente(clientes, codCli);
+                System.out.printf("%-7s | %-7s| %-21s| %-12s| %-21s| %s%n",
+                        contatos[i][0],
+                        contatos[i][1],
+                        nomeCli,
+                        contatos[i][2],
+                        contatos[i][3],
+                        contatos[i][4]);
+            }
+        }
+        if (!algum) System.out.println("Nenhum contato encontrado para este cliente.");
+    }
+
+    static void alterarContato(String[][] contatos, String[][] clientes, Scanner sc) {
+        listarContatosTabela(contatos, clientes);
+        System.out.print("\nQual contato deseja alterar => ");
+        int codigo;
+        try { codigo = Integer.parseInt(sc.nextLine().trim()); }
+        catch (NumberFormatException e) { System.out.println("Código inválido."); return; }
+
+        int idx = -1;
+        for (int i = 0; i < contatos.length; i++) {
+            if (contatos[i][0] != null && Integer.parseInt(contatos[i][0]) == codigo) {
+                idx = i; break;
+            }
+        }
+        if (idx == -1) { System.out.println("Contato não encontrado."); return; }
+
+        System.out.println("\nContato encontrado:");
+        System.out.println("CodCont | CodCli | Tipo        | Valor                | Status");
+        System.out.println("===============================================================");
+        System.out.printf("%-7s | %-7s| %-12s| %-21s| %s%n",
+                contatos[idx][0],
+                contatos[idx][1],
+                contatos[idx][2],
+                contatos[idx][3],
+                contatos[idx][4]);
+
+        System.out.print("\nDeseja alterar este contato? (S/N): ");
+        String alterar = sc.nextLine().trim().toUpperCase();
+        if (!alterar.equals("S")) { System.out.println("Alteração cancelada."); return; }
+
+        System.out.println("\nDigite os novos dados:");
+        System.out.print("Tipo [" + contatos[idx][2] + "]: ");
+        String tipo = sc.nextLine().trim();
+        if (!tipo.isEmpty()) contatos[idx][2] = tipo;
+
+        System.out.print("Valor [" + contatos[idx][3] + "]: ");
+        String valor = sc.nextLine().trim();
+        if (!valor.isEmpty()) contatos[idx][3] = valor;
+
+        contatos[idx][4] = "ATIVO";
+        System.out.println("Contato alterado com sucesso.");
+    }
+
+    static String[][] apagarContato(String[][] contatos, String[][] clientes, Scanner sc) {
+        listarContatosTabela(contatos, clientes);
+        System.out.print("\nQual contato deseja apagar => ");
+        int codigo;
+        try { codigo = Integer.parseInt(sc.nextLine().trim()); }
+        catch (NumberFormatException e) { System.out.println("Código inválido."); return contatos; }
+
+        int idx = -1;
+        for (int i = 0; i < contatos.length; i++) {
+            if (contatos[i][0] != null && Integer.parseInt(contatos[i][0]) == codigo) {
+                idx = i; break;
+            }
+        }
+        if (idx == -1) { System.out.println("Contato não encontrado."); return contatos; }
+
+        System.out.println("\nContato encontrado:");
+        System.out.println("CodCont | CodCli | Tipo        | Valor                | Status");
+        System.out.println("----------------------------------------------------------------");
+        System.out.printf("%-7s | %-7s| %-12s| %-21s| %s%n",
+                contatos[idx][0], contatos[idx][1], contatos[idx][2],
+                contatos[idx][3], contatos[idx][4]);
+
+        System.out.print("\nConfirma exclusão? (S/N): ");
+        String exclusao = sc.nextLine().trim().toUpperCase();
+        if (!exclusao.equals("S")) { System.out.println("Exclusão cancelada."); return contatos; }
+
+        int total = contarContatos(contatos);
+        String[][] nova = new String[total > 0 ? total - 1 : 0][5];
+        int j = 0;
+        for (int i = 0; i < contatos.length; i++) {
+            if (contatos[i][0] != null && Integer.parseInt(contatos[i][0]) != codigo) {
+                nova[j] = copiarLinha(contatos[i]);
+                j++;
+            }
+        }
+        System.out.println("Contato removido com sucesso.");
+        return nova;
+    }
 
 
     /* ========= Clientes ========= */
