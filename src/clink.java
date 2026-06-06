@@ -269,6 +269,47 @@ public class clink {
         return nova;
     }
 
+    //MENU CONTATO
+
+    static String[][] menuContatos(String[][] contatos, String[][] clientes, Scanner sc) {
+        int opcao;
+        do {
+            System.out.println("\n========== GERENCIAR CONTATOS ==========");
+            System.out.println("1 - Incluir contato");
+            System.out.println("2 - Listar contatos (todos)");
+            System.out.println("3 - Listar contatos de um cliente");
+            System.out.println("4 - Alterar contato");
+            System.out.println("5 - Apagar contato");
+            System.out.println("0 - Voltar");
+            System.out.print("Opção: ");
+            try { opcao = Integer.parseInt(sc.nextLine().trim()); }
+            catch (NumberFormatException e) { opcao = -1; }
+
+            switch (opcao) {
+                case 1:
+                    contatos = incluirContato(contatos, clientes, sc);
+                    break;
+                case 2:
+                    listarContatosTabela(contatos, clientes);
+                    break;
+                case 3:
+                    listarContatosPorCliente(contatos, clientes, sc);
+                    break;
+                case 4:
+                    alterarContato(contatos, clientes, sc);
+                    break;
+                case 5:
+                    contatos = apagarContato(contatos, clientes, sc);
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (opcao != 0);
+        return contatos;
+    }
+
 
     /* ========= Clientes ========= */
 
