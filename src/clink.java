@@ -469,6 +469,86 @@ public class clink {
         return clientes;
     }
 
+    public static void ordenarClientesPorNome(String[][] clientes) {
+        // Percorre a matriz comparando cada cliente com o próximo
+        for (int i = 0; i < clientes.length - 1; i++) {
+            for (int j = i + 1; j < clientes.length; j++) {
+
+                // Ignora linhas vazias
+                if (clientes[i][0] == null || clientes[j][0] == null) continue;
+
+                // Se o nome do cliente i vier depois do nome do cliente j, troca as linhas
+                if (compararNomeCharPorChar(clientes[i][1], clientes[j][1]) > 0) {
+                    String[] temp = clientes[i];
+                    clientes[i] = clientes[j];
+                    clientes[j] = temp;
+                }
+            }
+        }
+        System.out.println("Clientes ordenados por nome com sucesso!");
+    }
+
+    /* ========= MENU CLIENTES ========= */
+
+    public static String[][] menuClientes(String[][] clientes, String[][] contatos, Scanner sc) {
+        int opcao;
+        do {
+            // Exibe as opções disponíveis para o usuário
+            System.out.println("\n========== GERENCIAR CLIENTES ==========");
+            System.out.println("1 - Incluir cliente");
+            System.out.println("2 - Listar clientes");
+            System.out.println("3 - Buscar cliente por código");
+            System.out.println("4 - Alterar cliente");
+            System.out.println("5 - Apagar cliente");
+            System.out.println("6 - Ordenar por nome");
+            System.out.println("0 - Voltar");
+            System.out.print("Opção: ");
+
+            // Tenta ler a opção digitada, se não for número usa -1 para cair no default
+            try { opcao = Integer.parseInt(sc.nextLine().trim()); }
+            catch (NumberFormatException e) { opcao = -1; }
+
+            switch (opcao) {
+                case 1:
+                    // Chama a função que cadastra um novo cliente
+                    clientes = incluirCliente(clientes, sc);
+                    break;
+                case 2:
+                    // Exibe todos os clientes em formato de tabela
+                    listarClientesTabela(clientes);
+                    break;
+                case 3:
+                    // Busca um cliente pelo código e exibe se encontrado
+                    System.out.print("Digite o código do cliente: ");
+                    String cod = sc.nextLine().trim();
+                    int idx = buscarClientePorCodigo(clientes, cod);
+                    if (idx == -1) System.out.println("Cliente não encontrado.");
+                    else listarClientesTabela(clientes);
+                    break;
+                case 4:
+                    // Permite alterar os dados de um cliente existente
+                    clientes = alterarCliente(clientes, sc);
+                    break;
+                case 5:
+                    // Remove um cliente da matriz
+                    clientes = apagarCliente(clientes, sc);
+                    break;
+                case 6:
+                    // Ordena os clientes por nome e exibe a lista atualizada
+                    ordenarClientesPorNome(clientes);
+                    listarClientesTabela(clientes);
+                    break;
+                case 0:
+                    // Volta ao menu principal
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (opcao != 0); // Fica no loop até o usuário escolher voltar
+
+        return clientes;
+    }
+
     /* ========= RELATÓRIOS ========= */
 
     public static void menuRelatorios(String[][] clientes, String[][] contatos, Scanner ler) {
@@ -586,7 +666,7 @@ public class clink {
             switch (opcao) {
 
                 case 1:
-                    clientes = incluirCliente(clientes, scanner);
+                    clientes = menuClientes(clientes, contatos, scanner);
                     break;
 
                 case 2:
