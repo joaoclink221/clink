@@ -50,164 +50,6 @@ public class clink {
         }
     }
 
-    /* ========= VALIDAÇÕES DE CLIENTE ========= */
-
-    public static String validarNome(Scanner sc) {
-        while (true) {
-            System.out.print("Informe o nome: ");
-            String nome = sc.nextLine().trim();
-
-            if (nome.isEmpty()) {
-                System.out.println("  Erro: o nome não pode ser vazio.");
-                continue;
-            }
-
-            boolean soLetras = true;
-            for (int i = 0; i < nome.length(); i++) {
-                char c = nome.charAt(i);
-
-                if (!Character.isLetter(c) && c != ' ') {
-                    soLetras = false;
-                    break;
-                }
-            }
-
-            if (!soLetras) {
-                System.out.println("  Erro: o nome deve conter apenas letras e espaços.");
-                continue;
-            }
-
-            return nome;
-        }
-    }
-
-    public static String validarCpfCnpj(Scanner sc) {
-        while (true) {
-            System.out.print("Informe o CPF (11 dígitos) ou CNPJ (14 dígitos): ");
-            String valor = sc.nextLine().trim();
-
-
-            String apenasDigitos = "";
-            for (int i = 0; i < valor.length(); i++) {
-                char c = valor.charAt(i);
-                if (c >= '0' && c <= '9') {
-                    apenasDigitos += c;
-                }
-            }
-
-            if (apenasDigitos.length() == 11) {
-                return apenasDigitos;
-            } else if (apenasDigitos.length() == 14) {
-                return apenasDigitos;
-            } else {
-                System.out.println("  Erro: CPF deve ter 11 dígitos e CNPJ deve ter 14 dígitos.");
-                System.out.println("  Você digitou " + apenasDigitos.length() + " dígito(s).");
-            }
-        }
-    }
-
-    public static String validarData(Scanner sc) {
-        while (true) {
-            System.out.print("Informe a data de nascimento (dd/mm/aaaa): ");
-            String data = sc.nextLine().trim();
-
-            if (data.length() != 10 || data.charAt(2) != '/' || data.charAt(5) != '/') {
-                System.out.println("  Erro: use o formato dd/mm/aaaa (ex: 25/03/1990).");
-                continue;
-            }
-
-            String diaStr  = data.substring(0, 2);
-            String mesStr  = data.substring(3, 5);
-            String anoStr  = data.substring(6, 10);
-
-            boolean tudoDigito = true;
-            String completo = diaStr + mesStr + anoStr;
-            for (int i = 0; i < completo.length(); i++) {
-                if (completo.charAt(i) < '0' || completo.charAt(i) > '9') {
-                    tudoDigito = false;
-                    break;
-                }
-            }
-            if (!tudoDigito) {
-                System.out.println("  Erro: a data deve conter apenas números e barras.");
-                continue;
-            }
-
-            int dia = Integer.parseInt(diaStr);
-            int mes = Integer.parseInt(mesStr);
-            int ano = Integer.parseInt(anoStr);
-
-            if (dia < 1 || dia > 31) {
-                System.out.println("  Erro: dia inválido (deve ser entre 01 e 31).");
-                continue;
-            }
-            if (mes < 1 || mes > 12) {
-                System.out.println("  Erro: mês inválido (deve ser entre 01 e 12).");
-                continue;
-            }
-            if (ano < 1900 || ano > 2025) {
-                System.out.println("  Erro: ano inválido (deve ser entre 1900 e 2025).");
-                continue;
-            }
-
-            return data;
-        }
-    }
-
-    public static String validarSexo(Scanner sc) {
-        while (true) {
-            System.out.print("Informe o sexo (M = Masculino / F = Feminino / O = Outro): ");
-            String sexo = sc.nextLine().trim().toUpperCase();
-
-            if (sexo.equals("M") || sexo.equals("F") || sexo.equals("O")) {
-                return sexo;
-            }
-
-            System.out.println("  Erro: digite apenas M, F ou O.");
-        }
-    }
-
-    public static String validarCidadeOuEstado(Scanner sc, String campo) {
-        while (true) {
-            System.out.print("Informe " + campo + ": ");
-            String valor = sc.nextLine().trim();
-
-            if (valor.isEmpty()) {
-                System.out.println("  Erro: " + campo + " não pode ser vazio.");
-                continue;
-            }
-
-            boolean soLetras = true;
-            for (int i = 0; i < valor.length(); i++) {
-                char c = valor.charAt(i);
-                if (!Character.isLetter(c) && c != ' ') {
-                    soLetras = false;
-                    break;
-                }
-            }
-
-            if (!soLetras) {
-                System.out.println("  Erro: " + campo + " deve conter apenas letras.");
-                continue;
-            }
-
-            return valor;
-        }
-    }
-
-    public static String validarStatus(Scanner sc) {
-        while (true) {
-            System.out.print("Informe o status (ATIVO / INATIVO): ");
-            String status = sc.nextLine().trim().toUpperCase();
-
-            if (status.equals("ATIVO") || status.equals("INATIVO")) {
-                return status;
-            }
-
-            System.out.println("  Erro: status deve ser ATIVO ou INATIVO.");
-        }
-    }
-
     /* ========= CONTATOS ========= */
 
     public static String[][] aumentarMatrizContatos(String[][] contatos) {
@@ -468,67 +310,6 @@ public class clink {
         return contatos;
     }
 
-    // MENU CLIENTE
-
-    static String[][] menuClientes(String[][] clientes, String[][] contatos, Scanner sc) {
-        int opcao;
-        do {
-            System.out.println("\n========== GERENCIAR CLIENTES ==========");
-            System.out.println("1 - Incluir cliente");
-            System.out.println("2 - Listar clientes");
-            System.out.println("3 - Consultar cliente por código");
-            System.out.println("4 - Alterar cliente");
-            System.out.println("5 - Apagar cliente");
-            System.out.println("6 - Ordenar por nome");
-            System.out.println("0 - Voltar");
-            System.out.print("Opção: ");
-            try { opcao = Integer.parseInt(sc.nextLine().trim()); }
-            catch (NumberFormatException e) { opcao = -1; }
-
-            switch (opcao) {
-                case 1:
-                    clientes = incluirCliente(clientes, sc);
-                    break;
-                case 2:
-                    listarClientesTabela(clientes);
-                    break;
-                case 3:
-                    System.out.print("Digite o código do cliente: ");
-                    try {
-                        int cod = Integer.parseInt(sc.nextLine().trim());
-                        int idx = buscarClientePorCodigo(clientes, String.valueOf(cod));
-                        if (idx == -1) {
-                            System.out.println("Cliente não encontrado.");
-                        } else {
-                            System.out.println("\nCódigo | Nome                | CPF/CNPJ   | Nascimento | Sexo | Cidade              | Estado | Status");
-                            System.out.println("--------------------------------------------------------------------------------------------------------------");
-                            System.out.printf("%-6s | %-20s| %-11s| %-11s| %-5s| %-20s| %-7s| %s%n",
-                                    clientes[idx][0], clientes[idx][1], clientes[idx][2],
-                                    clientes[idx][3], clientes[idx][4], clientes[idx][5],
-                                    clientes[idx][6], clientes[idx][7]);
-                        }
-                    } catch (NumberFormatException e) { System.out.println("Código inválido."); }
-                    break;
-                case 4:
-                    alterarCliente(clientes, sc);
-                    break;
-                case 5:
-                    clientes = apagarCliente(clientes, contatos, sc);
-                    break;
-                case 6:
-                    ordenarClientesPorNome(clientes);
-                    listarClientesTabela(clientes);
-                    break;
-                case 0:
-                    break;
-                default:
-                    System.out.println("Opção inválida.");
-            }
-        } while (opcao != 0);
-        return clientes;
-    }
-
-
 
     /* ========= Clientes ========= */
 
@@ -569,18 +350,29 @@ public class clink {
         for (int i = 0; i < clientes.length; i++) {
             if (clientes[i][0] == null) {
                 clientes[i][0] = String.valueOf(novoCodigo);
-                clientes[i][1] = validarNome(sc);
-                clientes[i][2] = validarCpfCnpj(sc);
-                clientes[i][3] = validarData(sc);
-                clientes[i][4] = validarSexo(sc);
-                clientes[i][5] = validarCidadeOuEstado(sc, "a cidade");
-                clientes[i][6] = validarCidadeOuEstado(sc, "o estado");
-                clientes[i][7] = validarStatus(sc);
-                System.out.println("Cliente cadastrado com sucesso! Código: " + novoCodigo);
+                System.out.println("informe o nome:");
+                clientes[i][1] = sc.nextLine();
+
+                System.out.println("informe o CPF ou CNPJ:");
+                clientes[i][2] = sc.nextLine();
+
+                System.out.println("informe o Data de nascimento:");
+                clientes[i][3] = sc.nextLine();
+
+                System.out.println("informe o Sexo:");
+                clientes[i][4] = sc.nextLine();
+
+                System.out.println("informe o Cidade:");
+                clientes[i][5] = sc.nextLine();
+
+                System.out.println("informe o Estado:");
+                clientes[i][6] = sc.nextLine();
+
+                System.out.println("informe o Status:");
+                clientes[i][7] = sc.nextLine();
                 break;
             }
         }
-
         return clientes;
     }
 
@@ -647,7 +439,7 @@ public class clink {
         return clientes;
     }
 
-    public static String[][] apagarCliente(String[][] clientes, String[][] contatos, Scanner sc) {
+    public static String[][] apagarCliente(String[][] clientes, Scanner sc) {
         listarClientesTabela(clientes);
 
         System.out.println("informe o código do cliente que deseja apagar");
@@ -675,22 +467,6 @@ public class clink {
 
         }
         return clientes;
-    }
-
-    static void ordenarClientesPorNome(String[][] clientes) {
-        int n = clientes.length;
-        for (int i = 0; i < n - 1; i++) {
-            for (int j = 0; j < n - i - 1; j++) {
-                if (clientes[j][0] != null && clientes[j+1][0] != null) {
-                    if (compararNomeCharPorChar(clientes[j][1], clientes[j+1][1]) > 0) {
-                        trocarLinhas(clientes, j, j + 1);
-                    }
-                } else if (clientes[j][0] == null && clientes[j+1][0] != null) {
-                    trocarLinhas(clientes, j, j + 1);
-                }
-            }
-        }
-        System.out.println("Clientes ordenados por nome.");
     }
 
     /* ========= RELATÓRIOS ========= */
@@ -793,38 +569,6 @@ public class clink {
         Scanner scanner = new Scanner(System.in);
 
         String[][] contatos = new String[5][5];
-        String[][] clientes = new String[5][8];
-
-        int opcao;
-        do {
-            System.out.println("\n============================================");
-            System.out.println("   SISTEMA DE CADASTRO DE CLIENTES E CONTATOS");
-            System.out.println("============================================");
-            System.out.println("1 - Gerenciar clientes");
-            System.out.println("2 - Gerenciar contatos");
-            System.out.println("3 - Relatórios");
-            System.out.println("0 - Sair");
-            System.out.print("Opção: ");
-            try { opcao = Integer.parseInt(scanner.nextLine().trim()); }
-            catch (NumberFormatException e) { opcao = -1; }
-
-            switch (opcao) {
-                case 1:
-                    clientes = menuClientes(clientes, contatos, scanner);
-                    break;
-                case 2:
-                    contatos = menuContatos(contatos, clientes, scanner);
-                    break;
-                case 3:
-                    menuRelatorios(clientes, contatos, scanner);
-                    break;
-                case 0:
-                    System.out.println("Encerrando o sistema. Até logo!");
-                    break;
-                default:
-                    System.out.println("Opção inválida.");
-            }
-        } while (opcao != 0);
 
     }
 }
