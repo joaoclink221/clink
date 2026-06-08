@@ -266,5 +266,40 @@ public class clink {
         String[][] clientes = new String[5][8];
         String[][] contatos = new String[5][5];
 
+        int opcao = -1;
+
+        // Loop principal — fica rodando até o usuário escolher sair
+        while (opcao != 0) {
+            System.out.println("\n===== MENU PRINCIPAL =====");
+            System.out.println("1 - Gerenciar clientes");
+            System.out.println("2 - Gerenciar contatos");
+            System.out.println("3 - Relatórios");
+            System.out.println("0 - Sair");
+            System.out.print("Escolha uma opção: ");
+            opcao = Integer.parseInt(scanner.nextLine());
+
+            switch (opcao) {
+
+                case 1: // menuClientes(clientes, contatos, scanner); // será conectado quando o grupo terminar
+                    System.out.println("Em breve...");
+                    break;
+
+                case 2:
+                    // menuContatos(clientes, contatos, scanner); // será conectado quando o grupo terminar
+                    System.out.println("Em breve...");
+                    break;
+
+                case 3:
+                    menuRelatorios(clientes, contatos, scanner);
+                    break;
+
+                case 0:
+                    System.out.println("Saindo do sistema...");
+                    break;
+
+                default:
+                    System.out.println("Opção Inválida!");
+            }
+        }
     }
 }
