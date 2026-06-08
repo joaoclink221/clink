@@ -569,6 +569,7 @@ public class clink {
         Scanner scanner = new Scanner(System.in);
 
         String[][] contatos = new String[5][5];
+        String[][] clientes = new String[5][8];
 
         int opcao = -1;
 
@@ -584,13 +585,12 @@ public class clink {
 
             switch (opcao) {
 
-                case 1: // menuClientes(clientes, contatos, scanner); // será conectado quando o grupo terminar
-                    System.out.println("Em breve...");
+                case 1:
+                    clientes = incluirCliente(clientes, scanner);
                     break;
 
                 case 2:
-                    // menuContatos(clientes, contatos, scanner); // será conectado quando o grupo terminar
-                    System.out.println("Em breve...");
+                    contatos = menuContatos(contatos, clientes, scanner);
                     break;
 
                 case 3:
